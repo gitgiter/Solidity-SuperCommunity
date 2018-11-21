@@ -74,4 +74,15 @@ contract CommentManager {
 
         return true;
     }
+
+    function getCommentByIndex(uint _index) public view returns(string, string, string, uint) {
+
+        Comment memory comment = comments[_index];
+        return (comment.name, comment.text, comment.head_img, comment.time);
+    }
+
+    function getCommentCount() public view returns(uint) {
+
+        return comments.length;
+    }
 }

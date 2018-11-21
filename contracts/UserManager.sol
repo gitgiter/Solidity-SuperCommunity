@@ -109,4 +109,15 @@ contract UserManager {
             }
         }
     }
+
+    function getUserByIndex(uint _index) public view returns(string, string, string, string, string) {
+
+        User memory user = users[_index];
+        return (user.name, user.head_img, user.moto, user.hobby, user.birthday);
+    }
+
+    function getUserCount() public view returns(uint) {
+
+        return users.length;
+    }
 }
