@@ -11,7 +11,7 @@ contract CommentManager {
 
         // optional
         string head_img;   // an image url
-        uint blocktime;    // the unix time (seconds from 1970 to now)
+        uint time;    // the unix time (seconds from 1970 to now)
     }
 
     Comment[] comments; // all the comments
@@ -30,7 +30,7 @@ contract CommentManager {
     function addComment(string _name, string _comment, string _head_img) public commentCheck(_comment) returns(bool) {
 
         // add a comment
-        uint id = comments.push(Comment(0, _name, _comment, _head_img, block.timestamp)) - 1;
+        uint id = comments.push(Comment(0, _name, _comment, _head_img, now)) - 1;
 
         // set id
         comments[id].id = id;
@@ -50,14 +50,6 @@ contract CommentManager {
     //     return userComments;
     // }
 
-    modifier balanceCheck() {
-
-        // balance - msg.value must greater than 0
-        require(msg.sender.balance - msg.value > 0, "balance not enough.");
-
-        _;
-    }
-
     modifier validAddress(address _addr) {
 
         // address cannot be 0x0
@@ -72,10 +64,7 @@ contract CommentManager {
         return comments[_id].name;
     }
 
-    function rewardByAddr(address to, uint _id) public         
-        validAddress(to)
-        balanceCheck 
-        payable returns(bool) {
+    function rewardByAddr(address to, uint _id) public validAddress(to) payable returns(bool) {
 
         // reward a user directly
         to.transfer(msg.value); // left some for gas?

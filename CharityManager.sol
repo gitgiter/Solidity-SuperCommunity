@@ -10,20 +10,16 @@ contract CharityManager is Ownable {
 
     function donateToCharity() public payable {
 
+        // pay for donation
         require(msg.value >= perAmount);
 
         // return some extra money to sender
         uint k = msg.value / perAmount;
-        if (k > 1) {
-            uint changes = msg.value - k * perAmount;
-            msg.sender.transfer(changes);
-        }
-
-        // sender donate some money to charity
-        address(this).transfer(msg.value);
+        uint changes = msg.value - k * perAmount;
+        msg.sender.transfer(changes);
     }
 
-    function donateFromCharity(address _to, uint _amout) public onlyOwner payable {
+    function donateFromCharity(address _to, uint _amout) public onlyOwner {
         // only the manager of this charity fund pool can call this function
 
         // donate some money to world
