@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.4.24;
 
 contract CommentManager {
 
@@ -66,7 +66,7 @@ contract CommentManager {
         _;
     }
 
-    function getNameByCommentId(uint _id) public returns(string) {
+    function getNameByCommentId(uint _id) public view returns(string) {
 
         // get a username by comment id
         return comments[_id].name;
