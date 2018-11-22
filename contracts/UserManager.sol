@@ -19,7 +19,7 @@ contract UserManager {
 
     mapping(address => User) addrToUser;  // mapping account address to a user
     mapping(string => address) nameToAddr;  // mapping a username to account address
-    mapping(string => string[]) nameToWatches; // mapping a username to all the users' name he or she watched
+    mapping(address => address[]) addrToWatches; // mapping a user address to all the users' address he or she watched
 
     modifier validName(string _name) {
         
@@ -73,6 +73,8 @@ contract UserManager {
 
         // add a new user        
         users.push(User(_name, "", "", "", ""));
+        nameToAddr[_name] = msg.sender;
+        addrToUser[msg.sender] = User(_name, "", "", "", "");
 
         return true;
     }
@@ -86,7 +88,8 @@ contract UserManager {
 
         // to watch a user
         string memory name = addrToUser[msg.sender].name;
-        nameToWatches[name].push(name);
+        address toWatch = nameToAddr[name];
+        addrToWatches[msg.sender].push(toWatch);
     }
 
     function unwatch(string _name) public
@@ -94,23 +97,28 @@ contract UserManager {
         existName(_name) {
 
         // to unwatch a user
-        string memory name = addrToUser[msg.sender].name;
-        for (uint i = 0; i < nameToWatches[name].length; i++) {
+        address toUnwatch = nameToAddr[_name];
+        uint length = addrToWatches[msg.sender].length;
+        for (uint i = 0; i < length; i++) {
+
+            address watched = addrToWatches[msg.sender][i];
             
-            if (bytes(nameToWatches[name][i]).length == 0) {
-                // skip the empty string
+            if (watched == address(0)) {
+                // skip the invalid address
                 continue;
             }
 
-            if (keccak256(abi.encodePacked(_name)) == keccak256(abi.encodePacked(nameToWatches[name][i]))) {
+            if (toUnwatch == watched) {
                 // remove the user who name _name from watched
-                delete nameToWatches[name][i];
+                delete addrToWatches[msg.sender][i];
                 break;
             }
         }
     }
 
     function getUserByIndex(uint _index) public view returns(string, string, string, string, string) {
+
+        require(_index < getUserCount(), "index out of bound");
 
         User memory user = users[_index];
         return (user.name, user.head_img, user.moto, user.hobby, user.birthday);
@@ -119,5 +127,30 @@ contract UserManager {
     function getUserCount() public view returns(uint) {
 
         return users.length;
+    }
+
+    function getWatchesByIndex(uint _index) public view returns(string) {
+        
+        require(_index < getWatchesCount(), "index out of bound");
+
+        address watched = addrToWatches[msg.sender][_index];
+        string memory name = addrToUser[watched].name;
+        return name;
+    }
+
+    function getWatchesCount() public view returns(uint) {
+
+        return addrToWatches[msg.sender].length;
+    }
+
+    function getSender() public view returns(address) {
+
+        // for test
+        return msg.sender;
+    }
+
+    function getAddrByName(string _name) public view returns(address) {
+
+        return nameToAddr[_name];
     }
 }

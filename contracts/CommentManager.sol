@@ -38,18 +38,6 @@ contract CommentManager {
         return true;
     }
 
-    // function getCommetsByName(string _name) public view returns(Comment[]) {
-
-    //     // return all the comments made by a user
-    //     Comment[] memory userComments;
-    //     for (uint i = 0; i < comments.length; i++) {
-    //         if (keccak256(abi.encodePacked(_name)) == keccak256(abi.encodePacked(comments[i].name))) {
-    //             userComments.push(comments[i]);
-    //         }
-    //     } 
-    //     return userComments;
-    // }
-
     modifier validAddress(address _addr) {
 
         // address cannot be 0x0
@@ -67,7 +55,7 @@ contract CommentManager {
     function rewardByAddr(address to, uint _id) public validAddress(to) payable returns(bool) {
 
         // reward a user directly
-        to.transfer(msg.value); // left some for gas?
+        to.transfer(msg.value);
 
         // reward a comment by id
         commentIdToWei[_id] += msg.value;

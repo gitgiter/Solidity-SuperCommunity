@@ -11,7 +11,7 @@ contract CharityManager is Ownable {
     function donateToCharity() public payable {
 
         // pay for donation
-        require(msg.value >= perAmount);
+        require(msg.value >= perAmount, "should pay more than 1 ether");
 
         // return some extra money to sender
         uint k = msg.value / perAmount;
