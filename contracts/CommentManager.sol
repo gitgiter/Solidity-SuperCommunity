@@ -18,7 +18,7 @@ contract CommentManager {
 
     mapping(uint => uint) commentIdToWei; // mapping a comment id to all the rewards it received so far
 
-    modifier commentCheck(string _comment) {
+    modifier commentCheck(string memory _comment) {
 
         // the length of a comment must greater than 0
         require(bytes(_comment).length > 0, "the length of a comment must greater than 0");
@@ -27,7 +27,7 @@ contract CommentManager {
         _;
     }
 
-    function addComment(string _name, string _comment, string _head_img) public commentCheck(_comment) returns(bool) {
+    function addComment(string memory _name, string memory _comment, string memory _head_img) internal commentCheck(_comment) returns(bool) {
 
         // add a comment
         uint id = comments.push(Comment(0, _name, _comment, _head_img, now)) - 1;
@@ -46,25 +46,27 @@ contract CommentManager {
         _;
     }
 
-    function getNameByCommentId(uint _id) public view returns(string) {
+    function getNameByCommentId(uint _id) public view returns(string memory) {
 
         // get a username by comment id
         return comments[_id].name;
     }
 
-    function rewardByAddr(address to, uint _id) public validAddress(to) payable returns(bool) {
+    function rewardByAddr(address _to, uint _id) public validAddress(_to) payable returns(address) {
 
         // reward a user directly
-        to.transfer(msg.value);
+        _to.transfer(msg.value);
 
         // reward a comment by id
         commentIdToWei[_id] += msg.value;
 
-        return true;
+        // for test
+        return msg.sender;
     }
 
-    function getCommentByIndex(uint _index) public view returns(string, string, string, uint) {
+    function getCommentByIndex(uint _index) public view returns(string memory, string memory, string memory, uint) {
 
+        
         Comment memory comment = comments[_index];
         return (comment.name, comment.text, comment.head_img, comment.time);
     }

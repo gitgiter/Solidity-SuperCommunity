@@ -22,7 +22,14 @@ contract CharityManager is Ownable {
     function donateFromCharity(address _to, uint _amout) public onlyOwner {
         // only the manager of this charity fund pool can call this function
 
+        require(address(this).balance >= _amout * (10 ** 18), "contract balance not enough");
+
         // donate some money to world
         _to.transfer(_amout * perAmount);
+    }
+
+    function getCharityBalance() public view returns(uint) {
+        
+        return address(this).balance;
     }
 }

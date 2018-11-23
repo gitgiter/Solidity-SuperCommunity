@@ -21,7 +21,7 @@ contract UserManager {
     mapping(string => address) nameToAddr;  // mapping a username to account address
     mapping(address => address[]) addrToWatches; // mapping a user address to all the users' address he or she watched
 
-    modifier validName(string _name) {
+    modifier validName(string memory _name) {
         
         // require a valid name, the length of a name must greater than 2
         require(bytes(_name).length > 2, "the length of a name must greater than 2");
@@ -30,7 +30,7 @@ contract UserManager {
         _;
     }
 
-    modifier newName(string _name) {
+    modifier newName(string memory _name) {
 
         // require a new name, the address of the name must be 0x0 (otherwise, means duplicate name).
         require(nameToAddr[_name] == address(0), "this name has been used."); 
@@ -39,7 +39,7 @@ contract UserManager {
         _;
     }
 
-    modifier existName(string _name) {
+    modifier existName(string memory _name) {
         
         // require a exist name, the address of the name must exist.
         require(nameToAddr[_name] != address(0), "this name is not existed."); 
@@ -66,7 +66,7 @@ contract UserManager {
         _;
     }
 
-    function register(string _name) public 
+    function register(string memory _name) public 
         validName(_name)
         newName(_name)
         registerOnce(msg.sender) returns(bool) {
@@ -82,17 +82,16 @@ contract UserManager {
     // no need to login
     // because using msg.sender to authenticate is enough, so we don' need password.
 
-    function watch(string _name) public 
+    function watch(string memory _name) public 
         registered(msg.sender)
         existName(_name) {
 
         // to watch a user
-        string memory name = addrToUser[msg.sender].name;
-        address toWatch = nameToAddr[name];
+        address toWatch = nameToAddr[_name];
         addrToWatches[msg.sender].push(toWatch);
     }
 
-    function unwatch(string _name) public
+    function unwatch(string memory _name) public
         registered(msg.sender)
         existName(_name) {
 
@@ -116,7 +115,7 @@ contract UserManager {
         }
     }
 
-    function getUserByIndex(uint _index) public view returns(string, string, string, string, string) {
+    function getUserByIndex(uint _index) public view returns(string memory, string memory, string memory, string memory, string memory) {
 
         require(_index < getUserCount(), "index out of bound");
 
@@ -124,33 +123,59 @@ contract UserManager {
         return (user.name, user.head_img, user.moto, user.hobby, user.birthday);
     }
 
+    // function getAllUsers() public view returns(address[] memory) {
+
+    //     address[] memory result;
+    //     for (uint i = 0; i < getWatchesCount(); i++) {
+    //         address temp = getWatchesByIndex(i);
+    //         if (temp == address(0)) {
+    //             // skip the empty one
+    //             continue;
+    //         }
+    //         result.push(temp);
+    //     }
+    //     return result;
+    // }
+
     function getUserCount() public view returns(uint) {
 
         return users.length;
     }
 
-    function getWatchesByIndex(uint _index) public view returns(string) {
+    function getWatchesByIndex(uint _index) public view returns(address) {
         
         require(_index < getWatchesCount(), "index out of bound");
 
-        address watched = addrToWatches[msg.sender][_index];
-        string memory name = addrToUser[watched].name;
-        return name;
+        return addrToWatches[msg.sender][_index];
     }
+
+    // function getAllWatches() public view returns(address[] memory) {
+
+    //     address[] memory result;
+    //     for (uint i = 0; i < getWatchesCount(); i++) {
+    //         address temp = getWatchesByIndex(i);
+    //         if (temp == address(0)) {
+    //             // skip the empty one
+    //             continue;d
+    //         }
+    //         result.push(temp);
+    //     }
+    //     return result;
+    // }
 
     function getWatchesCount() public view returns(uint) {
 
         return addrToWatches[msg.sender].length;
     }
 
-    function getSender() public view returns(address) {
-
-        // for test
-        return msg.sender;
-    }
-
-    function getAddrByName(string _name) public view returns(address) {
+    function getAddrByName(string memory _name) public view returns(address) {
 
         return nameToAddr[_name];
+    }
+
+    function getNameByAddr(address addr) public view returns(string memory) {
+
+        User memory user = addrToUser[addr];
+        return user.name;
     }
 }

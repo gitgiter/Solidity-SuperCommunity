@@ -36,7 +36,7 @@ contract TestSuperCommunity {
         sc.watch("test1");
         string memory expected = "test1";
         string memory result;
-        result = sc.getWatchesByIndex(0);
+        result = sc.getNameByAddr(sc.getWatchesByIndex(0));
 
         Assert.equal(result, expected, "watch error");
     }
@@ -54,7 +54,7 @@ contract TestSuperCommunity {
         sc.unwatch("test1");
         string memory expected = "";
         string memory result;
-        result = sc.getWatchesByIndex(0);
+        result = sc.getNameByAddr(sc.getWatchesByIndex(0));
 
         Assert.equal(result, expected, "unwatch error");
     }
