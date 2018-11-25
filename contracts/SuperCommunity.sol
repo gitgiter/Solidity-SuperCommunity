@@ -4,8 +4,9 @@ import "./UserManager.sol";
 import "./CommentManager.sol";
 import "./MailManager.sol";
 import "./CharityManager.sol";
+import "./GameManager.sol";
 
-contract SuperCommunity is UserManager, CommentManager, MailManager, CharityManager {
+contract SuperCommunity is UserManager, CommentManager, MailManager, CharityManager, GameManager {
     
     function sendComment(string memory _comment) public registered(msg.sender) {
 
@@ -30,5 +31,14 @@ contract SuperCommunity is UserManager, CommentManager, MailManager, CharityMana
         // the sender should have registered and so do the receiver
         User memory user = addrToUser[msg.sender];
         addMail(user.name, _to, _title, _text);
+    }
+
+    function getWinnerName() public view returns(string memory, string memory, string memory) {
+
+        address addr1;
+        address addr2;
+        address addr3;
+        (addr1, addr2, addr3) = getWinner();
+        return (getNameByAddr(addr1), getNameByAddr(addr2), getNameByAddr(addr3));
     }
 }

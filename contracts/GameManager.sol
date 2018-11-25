@@ -7,7 +7,7 @@ contract GameManager {
     uint32 rand; // a number to guess
     uint constant ticket = 6 ether; // the gamble fee
 
-    uint constant duration = 1 days; // duration of the game
+    uint constant duration = 20 seconds; // duration of the game
     uint endTime;
 
     // top three participants, who guess most closely
@@ -90,7 +90,7 @@ contract GameManager {
     function guess(uint _rand) public payable {
         
         // pay for gamble
-        require(msg.value >= ticket);
+        require(msg.value >= ticket, "need to pay for at least 6 ether");
 
         // return some extra money to sender
         uint changes = msg.value - ticket;
@@ -100,35 +100,38 @@ contract GameManager {
         int dist = int(udist);
 
         // initialize
-        if (topThree[0] == -1) {
-            topThree[0] = dist;
-            firstPrize = msg.sender;
-            return;
-        }
-        if (topThree[1] == -1) {
-            topThree[1] = dist;
-            secondPrize = msg.sender;
-            return;
-        }
-        if (topThree[2] == -1) {
-            topThree[2] = dist;
-            thirdPrize = msg.sender;
-            return;
-        }
+        // if (topThree[0] == -1) {
+        //     topThree[0] = dist;
+        //     firstPrize = msg.sender;
+        //     return;
+        // }
+        // if (topThree[1] == -1) {
+        //     topThree[1] = dist;
+        //     secondPrize = msg.sender;
+        //     return;
+        // }
+        // if (topThree[2] == -1) {
+        //     topThree[2] = dist;
+        //     thirdPrize = msg.sender;
+        //     return;
+        // }
         
         // compare
-        if (dist < topThree[0]) {
+        if (topThree[0] == -1 || dist < topThree[0]) {
             topThree[2] = topThree[1];
             topThree[1] = topThree[0];
             topThree[0] = dist;
+            thirdPrize = secondPrize;
+            secondPrize = firstPrize;
             firstPrize = msg.sender;
         }
-        else if (dist < topThree[1]) {
+        else if (topThree[1] == -1 || dist < topThree[1]) {
             topThree[2] = topThree[1];
             topThree[1] = dist;
+            thirdPrize = secondPrize;
             secondPrize = msg.sender;
         }
-        else if (dist < topThree[2]) {
+        else if (topThree[2] == -1 || dist < topThree[2]) {
             topThree[2] = dist;
             thirdPrize = msg.sender;
         }
@@ -140,4 +143,14 @@ contract GameManager {
         return (firstPrize, secondPrize, thirdPrize);
     }
 
+    function getGameBalance() public view returns(uint) {
+
+        return address(this).balance;
+    }
+
+    function getRand() public view returns(uint32) {
+
+        // for test
+        return rand;
+    }
 }

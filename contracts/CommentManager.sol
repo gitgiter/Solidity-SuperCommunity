@@ -75,4 +75,9 @@ contract CommentManager {
 
         return comments.length;
     }
+
+    function getCommentBalanceByIndex(uint _index) public view returns(uint) {
+
+        return commentIdToWei[_index];
+    }
 }

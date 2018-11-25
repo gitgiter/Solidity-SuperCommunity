@@ -173,9 +173,9 @@ contract UserManager {
         return nameToAddr[_name];
     }
 
-    function getNameByAddr(address addr) public view returns(string memory) {
+    function getNameByAddr(address _addr) public view returns(string memory) {
 
-        User memory user = addrToUser[addr];
+        User memory user = addrToUser[_addr];
         return user.name;
     }
 }
