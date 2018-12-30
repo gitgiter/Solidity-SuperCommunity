@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 import "./Ownable.sol";
 
@@ -19,13 +19,13 @@ contract CharityManager is Ownable {
         msg.sender.transfer(changes);
     }
 
-    function donateFromCharity(address _to, uint _amout) public onlyOwner {
+    function donateFromCharity(address payable _to, uint _amout) public onlyOwner payable {
         // only the manager of this charity fund pool can call this function
 
         require(address(this).balance >= _amout * (10 ** 18), "contract balance not enough");
 
         // donate some money to world
-        _to.transfer(_amout * perAmount);
+        address(_to).transfer(_amout * perAmount);
     }
 
     function getCharityBalance() public view returns(uint) {

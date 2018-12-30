@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 contract UserManager {
 
@@ -18,7 +18,7 @@ contract UserManager {
     User[] users;   // all the users
 
     mapping(address => User) addrToUser;  // mapping account address to a user
-    mapping(string => address) nameToAddr;  // mapping a username to account address
+    mapping(string => address payable) nameToAddr;  // mapping a username to account address
     mapping(address => address[]) addrToWatches; // mapping a user address to all the users' address he or she watched
 
     modifier validName(string memory _name) {

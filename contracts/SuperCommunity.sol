@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 import "./UserManager.sol";
 import "./CommentManager.sol";
@@ -19,7 +19,7 @@ contract SuperCommunity is UserManager, CommentManager, MailManager, CharityMana
 
         // the name should exist
         string memory name = getNameByCommentId(_id);
-        address to = nameToAddr[name];
+        address payable to = nameToAddr[name];
         address sender = rewardByAddr(to, _id);
         return sender;
     }

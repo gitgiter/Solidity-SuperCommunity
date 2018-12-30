@@ -1,20 +1,20 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 contract GameManager {
     
     // one simple gamble game
 
-    uint32 rand; // a number to guess
-    uint constant ticket = 6 ether; // the gamble fee
+    uint rand; // a number to guess
+    uint constant ticket = 1 ether; // the gamble fee
 
     uint constant duration = 20 seconds; // duration of the game
     uint endTime;
 
     // top three participants, who guess most closely
     // if more than two players guess the same num, the first win.
-    address firstPrize;
-    address secondPrize;
-    address thirdPrize;
+    address payable firstPrize;
+    address payable secondPrize;
+    address payable thirdPrize;
     // address[] successfullyParticipation; // others
 
     int[3] topThree; // the top three small distances, default -1 (need to be set to positive)
@@ -24,10 +24,10 @@ contract GameManager {
         startGame();
     }
 
-    function generateRand() private view returns (uint32) {
-        uint32 digits = 16;
-        uint32 modulus = uint32(10) ** digits;
-        uint32 num = uint32(keccak256(abi.encodePacked(now)));
+    function generateRand() private view returns (uint) {
+        uint digits = 16;
+        uint modulus = uint(10) ** digits;
+        uint num = uint(keccak256(abi.encodePacked(now)));
         return num % modulus;
     }
 
@@ -90,7 +90,7 @@ contract GameManager {
     function guess(uint _rand) public payable {
         
         // pay for gamble
-        require(msg.value >= ticket, "need to pay for at least 6 ether");
+        require(msg.value >= ticket, "need to pay for at least 1 ether");
 
         // return some extra money to sender
         uint changes = msg.value - ticket;
@@ -98,23 +98,6 @@ contract GameManager {
 
         uint udist = distance(rand, _rand);
         int dist = int(udist);
-
-        // initialize
-        // if (topThree[0] == -1) {
-        //     topThree[0] = dist;
-        //     firstPrize = msg.sender;
-        //     return;
-        // }
-        // if (topThree[1] == -1) {
-        //     topThree[1] = dist;
-        //     secondPrize = msg.sender;
-        //     return;
-        // }
-        // if (topThree[2] == -1) {
-        //     topThree[2] = dist;
-        //     thirdPrize = msg.sender;
-        //     return;
-        // }
         
         // compare
         if (topThree[0] == -1 || dist < topThree[0]) {
@@ -148,7 +131,7 @@ contract GameManager {
         return address(this).balance;
     }
 
-    function getRand() public view returns(uint32) {
+    function getRand() public view returns(uint) {
 
         // for test
         return rand;

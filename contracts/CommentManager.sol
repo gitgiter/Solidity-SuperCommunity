@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 contract CommentManager {
 
@@ -52,7 +52,7 @@ contract CommentManager {
         return comments[_id].name;
     }
 
-    function rewardByAddr(address _to, uint _id) public validAddress(_to) payable returns(address) {
+    function rewardByAddr(address payable _to, uint _id) public validAddress(_to) payable returns(address) {
 
         // reward a user directly
         _to.transfer(msg.value);

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SuperCommunity - Truffle Webpack Frontend</title>
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="./app.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+  <header class="brown">
+    <h1>Super Community</h1>
+    <span>A super community contract based on solidity</span>
+  </header>
+  
+  <div class="container blue circleBehind">
+    <a href="#comments">HOME</a>
+    <a href="#comments">COMMENTS</a>
+    <a href="#comments">MAILBOX</a>
+    <a>CHARITY</a>
+    <a href="#game">GAME</a>
+  </div>
+
+  <div class="form" hidden>
+      
+    <div id="signup">   
+      <h1>CHOOSE YOUR NAME</h1>
+      
+      <div class="field-wrap">
+        <label>
+          Name<span class="req">*</span>
+        </label>
+        <input id="name" type="text" required/>
+      </div>
+
+      <div class="field-wrap">
+        <label>Moto</label>
+        <input id="moto" type="text">
+      </div>
+      
+      <div class="field-wrap">
+        <label>Hobby</label>
+        <input id="hobby" type="text">
+      </div>
+
+      <div class="field-wrap">
+        <label>Birthday</label>
+        <input id="birthday" type="text">
+      </div>
+      
+      <button class="button button-block" onclick="App.register()"/>Get Started</button>
+
+    </div>
+    
+  </div> <!-- /form -->
+
+	<div id="comments" class="comments-container">
+    <h1>Community</h1>
+    
+    <ul id="comments-list" class="comments-list">
+
+      <li>
+        <div class="comment-main-level">
+          <!-- Avatar -->
+          <div class="comment-avatar"><img src="http://www.jf258.com/uploads/2013-07-16/033639235.jpg" alt=""></div>
+          <div class="comment-box">
+            <div class="comment-head">
+              <h6 class="comment-name">You</h6>
+              <span>now</span>
+              <i class="fa fa-send" onclick="App.sendComment()"></i>
+            </div>
+            <textarea id="new-comment" class="comment-content" placeholder="Add a comment...">
+              
+            </textarea>
+          </div>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+  <div id="game">
+    <h1>A SMALL GAMEBLING GAME</h1>
+    <h2>You can get <span id="bonus">100%</span> of the prize pool for this round</h2>
+  
+    <div id="cont" data-pct="100">
+    <svg id="svg" width="200" height="200" viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <circle r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+      <circle id="bar" r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+    </svg>
+    </div>
+    <input id="percent" name="percent" placeholder="Guess a random number (uint)">
+  </div>
+
+  <footer>
+    <span>gitgiter<i class="fa fa-copyright"></i> All rights Reserved</span>
+  </footer>
+</body>
+</html>
